@@ -19,7 +19,31 @@
 
     h1 { font-size: 18px; letter-spacing: 3px; font-weight: 700; text-align: center; margin-bottom: 32px; text-shadow: 0 0 20px rgba(255,255,255,0.3); }
 
-    .convo-img { width: 100%; max-width: 420px; mix-blend-mode: screen; display: block; margin: 0 auto; }
+    /* Chat screen simulation as background behind image */
+    .img-wrap {
+      position: relative;
+      width: 100%;
+      max-width: 420px;
+      border-radius: 24px;
+      overflow: hidden;
+    }
+
+    /* Purple chat background with stars behind the art */
+    .img-wrap:before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: #b565d8;
+      z-index: 0;
+    }
+
+    .convo-img {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      display: block;
+      mix-blend-mode: screen;
+    }
   </style>
 </head>
 <body>
@@ -27,7 +51,9 @@
   <div id="wrap">
     <a class="back" href="/">← back</a>
     <h1>✦ sample convo ✦</h1>
-    <img class="convo-img" src="convo.png" alt="sample conversation">
+    <div class="img-wrap">
+      <img class="convo-img" src="convo.png" alt="sample conversation">
+    </div>
   </div>
 
   <script>
