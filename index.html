@@ -142,6 +142,7 @@
       userName = name;
       roomCode = code;
       document.getElementById('name-screen').style.display = 'none';
+      history.pushState({ page: 'chat' }, '', '');
       connectWebSocket();
     });
 
@@ -229,6 +230,11 @@
     function escapeHtml(text) {
       return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
+    window.addEventListener('popstate', function() {
+      if (ws) { ws.close(); ws = null; }
+      document.getElementById('messages').innerHTML = '';
+      document.getElementById('name-screen').style.display = 'flex';
+    });
   </script>
 </body>
 </html>
