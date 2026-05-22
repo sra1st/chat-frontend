@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>🐰💬</title>
+  <title><link href="https://fonts.googleapis.com/css2?family=Nunito:wght@800&display=swap" rel="stylesheet">🐰💬</title>
   <style>
     * { margin: 0; padding: 0; -webkit-box-sizing: border-box; box-sizing: border-box; }
     html, body { height: 100%; overflow: hidden; }
@@ -16,7 +16,7 @@
 
     #name-screen { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #c97ee8; display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-orient: vertical; -webkit-flex-direction: column; flex-direction: column; -webkit-box-align: center; -webkit-align-items: center; align-items: center; -webkit-box-pack: center; -webkit-justify-content: center; justify-content: center; padding: 24px; z-index: 100; }
     #name-screen img { width: 180px; mix-blend-mode: screen; margin-bottom: 16px; display: block; }
-    #name-screen h2 { font-size: 26px; color: #fff; margin-bottom: 6px; margin-top: 0; font-weight: 700; letter-spacing: 4px; text-shadow: 0 0 30px rgba(255,255,255,0.3); }
+    #name-screen h2 { font-size: 26px; color: #fff;font-family: 'Nunito', sans-serif; margin-bottom: 6px; margin-top: 0; font-weight: 700; letter-spacing: 4px; text-shadow: 0 0 30px rgba(255,255,255,0.3); }
     #name-screen .subtitle { font-size: 11px; color: rgba(255,255,255,0.5); margin-bottom: 32px; text-align: center; letter-spacing: 1.5px; }
     .field-label { font-size: 11px; color: rgba(255,255,255,0.55); letter-spacing: 2px; text-transform: uppercase; margin-bottom: 6px; width: 100%; max-width: 280px; text-align: left; }
     #name-input, #code-input { width: 100%; max-width: 280px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); border-radius: 16px; padding: 13px 18px; color: #fff; font-size: 15px; outline: none; -webkit-appearance: none; margin-bottom: 14px; }
@@ -31,7 +31,7 @@
 
     #header { padding: 14px 16px 10px; text-align: center; -webkit-flex-shrink: 0; flex-shrink: 0; position: relative; }
     #back-btn { position: absolute; left: 14px; top: 50%; -webkit-transform: translateY(-50%); transform: translateY(-50%); background: none; border: none; color: rgba(255,255,255,0.7); font-size: 18px; cursor: pointer; padding: 4px 8px; -webkit-appearance: none; }
-    #header h1 { font-size: 19px; font-weight: 700; color: #fff; letter-spacing: 3px; text-shadow: 0 0 20px rgba(255,255,255,0.4); }
+    #header h1 { font-size: 19px; font-weight: 700; font-family: 'Nunito', sans-serif;color: #fff; letter-spacing: 3px; text-shadow: 0 0 20px rgba(255,255,255,0.4); }
     #status { font-size: 11px; margin-top: 3px; color: rgba(255,255,255,0.6); letter-spacing: 1px; }
     #status.connected { color: rgba(255,255,255,0.95); }
     #status.disconnected { color: rgba(255,255,255,0.4); }
@@ -72,7 +72,7 @@
 
   <div id="name-screen">
     <img src="bunny.jpg" alt="">
-    <h2>bunny chat 🐰💬</h2>
+    <h2>bunnychat 🐰💬</h2>
     <div class="subtitle">end-to-end decrypted &nbsp;|&nbsp; no logs</div>
     <div class="field-label">your name</div>
     <input type="text" id="name-input" placeholder="enter your name" maxlength="20">
@@ -85,7 +85,7 @@
   <div id="app">
     <div id="header">
       <button id="back-btn" onclick="goBack()">←</button>
-      <h1>✦ bunny chat 🐰💬 ✦</h1>
+      <h1>✦ bunnychat  🐰💬 ✦</h1>
       <div id="status" class="disconnected">connecting...</div>
       <div id="presence"></div>
     </div>
