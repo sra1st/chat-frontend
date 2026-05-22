@@ -77,7 +77,7 @@
     <div class="field-label">your name</div>
     <input type="text" id="name-input" placeholder="enter your name" maxlength="20">
     <div class="field-label">bunny pass 🔑</div>
-    <input type="text" id="code-input" placeholder="enter your secret code" maxlength="40">
+    <input type="text" id="code-input" placeholder="enter or make your secret code" maxlength="40">
     <button id="join-btn">✦ enter ✦</button>
     <p class="footnote">like <a href="https://en.wikipedia.org/wiki/Crypto_AG" target="_blank">Crypto AG</a>, but for bunnies <span style="margin:0 8px;opacity:1;color:rgba(255,255,255,0.9);">✦</span> <a href="how-to.html">how to bunny</a></p>
   </div>
@@ -91,7 +91,7 @@
     </div>
     <div id="messages"></div>
     <div id="input-area">
-      <input type="text" id="msg-input" placeholder="say something...">
+      <input type="text" id="msg-input" placeholder="say hi!">
       <button id="send-btn">✦</button>
     </div>
   </div>
@@ -121,14 +121,17 @@
 
     function goBack() {
       if (ws) { ws.close(); ws = null; }
+      hasJoined = false;
+      isConnecting = false;
       document.getElementById('messages').innerHTML = '';
-      document.getElementById('name-screen').style.display = '-webkit-box';
       document.getElementById('name-screen').style.display = 'flex';
     }
 
     var userName = '';
     var roomCode = '';
     var ws = null;
+    var hasJoined = false;
+    var isConnecting = false;
     var messagesDiv = document.getElementById('messages');
     var statusDiv = document.getElementById('status');
     var presenceDiv = document.getElementById('presence');
@@ -154,12 +157,18 @@
     });
 
     function connectWebSocket() {
+      if (isConnecting) return;
+      isConnecting = true;
       ws = new WebSocket(WS_URL);
       ws.onopen = function() {
+        isConnecting = false;
         statusDiv.textContent = '✦ connected as ' + userName;
         statusDiv.className = 'connected';
         ws.send(JSON.stringify({ type: 'join', name: userName, code: roomCode }));
-        addSystemMessage('you joined');
+        if (!hasJoined) {
+          addSystemMessage('you hopped in');
+          hasJoined = true;
+        }
       };
       ws.onmessage = function(event) {
         var data = JSON.parse(event.data);
@@ -167,28 +176,31 @@
           addMessage(data.name, data.text, false);
         } else if (data.type === 'presence') {
           updatePresence(data.count);
+        } else if (data.type === 'system') {
+          addSystemMessage(data.text);
         }
       };
       ws.onclose = function() {
+        isConnecting = false;
         statusDiv.textContent = 'disconnected...';
         statusDiv.className = 'disconnected';
         presenceDiv.textContent = '';
         presenceDiv.className = '';
-        addSystemMessage('connection lost — reconnecting');
         setTimeout(connectWebSocket, 3000);
       };
       ws.onerror = function() {
-        statusDiv.textContent = 'connection error';
+        isConnecting = false;
+        statusDiv.textContent = 'uh oh... connection lost!';
         statusDiv.className = 'disconnected';
       };
     }
 
     function updatePresence(count) {
       if (count >= 2) {
-        presenceDiv.textContent = '✦ other bunny is here';
+        presenceDiv.textContent = '✦ somebunny is here';
         presenceDiv.className = 'active';
       } else {
-        presenceDiv.textContent = 'no one else here yet...';
+        presenceDiv.textContent = 'nobunny is here yet...';
         presenceDiv.className = '';
       }
     }
@@ -232,6 +244,8 @@
     }
     window.addEventListener('popstate', function() {
       if (ws) { ws.close(); ws = null; }
+      hasJoined = false;
+      isConnecting = false;
       document.getElementById('messages').innerHTML = '';
       document.getElementById('name-screen').style.display = 'flex';
     });
