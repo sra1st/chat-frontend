@@ -209,7 +209,7 @@
         presenceDiv.textContent = '✦ somebunny is here';
         presenceDiv.className = 'active';
       } else {
-        presenceDiv.textContent = 'nobunny is here yet...';
+        presenceDiv.textContent = hasJoined ? 'bunny hopped away 🐇' : 'nobunny is here yet...';
         presenceDiv.className = '';
       }
     }
