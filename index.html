@@ -24,7 +24,7 @@
     #name-screen img { width: 180px; mix-blend-mode: screen; margin-bottom: 16px; display: block; }
     #name-screen h2 { font-family: 'Nunito', sans-serif; font-size: 30px; color: #fff; margin-bottom: 6px; font-weight: 800; letter-spacing: 1px; text-shadow: 0 0 30px rgba(255,255,255,0.3); }
     #name-screen .subtitle { font-size: 11px; color: rgba(255,255,255,0.6); margin-bottom: 32px; text-align: center; letter-spacing: 1px; }
-    .field-label { font-size: 11px; color: rgba(255,255,255,0.6); letter-spacing: 1px; text-transform: lowercase; margin-bottom: 6px; width: 100%; max-width: 300px; text-align: left; }
+    .field-label { font-size: 11px; color: rgba(255,255,255,0.85); letter-spacing: 1px; text-transform: lowercase; margin-bottom: 6px; width: 100%; max-width: 300px; text-align: left; }
     #name-input, #code-input { width: 100%; max-width: 300px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); border-radius: 16px; padding: 13px 18px; color: #fff; font-size: 15px; outline: none; -webkit-appearance: none; margin-bottom: 14px; }
     #name-input::-webkit-input-placeholder, #code-input::-webkit-input-placeholder { color: rgba(255,255,255,0.4); }
     #name-input:focus, #code-input:focus { border-color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.25); }
@@ -83,7 +83,8 @@
     <div class="field-label">your name</div>
     <input type="text" id="name-input" placeholder="enter your name" maxlength="20">
     <div class="field-label">bunny pass 🔑</div>
-    <p style="font-size:10px;color:rgba(255,255,255,0.65);max-width:300px;text-align:center;margin-top:-8px;margin-bottom:8px;letter-spacing:0.5px;">make a code → share it with your bunny → they enter the same code to join you</p>
+    <input type="text" id="code-input" placeholder="enter or make your secret code" maxlength="40">
+    <p style="font-size:10px;color:rgba(255,255,255,0.45);max-width:300px;text-align:center;margin-top:-8px;margin-bottom:8px;letter-spacing:0.5px;">same code = same garden | share it with your bunny 🐇</p>
     <button id="join-btn">✦ enter ✦</button>
     <p class="footnote">like <a href="https://en.wikipedia.org/wiki/Crypto_AG" target="_blank">Crypto AG</a>, but for bunnies <span style="margin:0 8px;color:rgba(255,255,255,0.9);">✦</span> <a href="how-to.html">how to bunny</a></p>
   </div>
