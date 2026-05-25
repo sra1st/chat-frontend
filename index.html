@@ -148,6 +148,7 @@
     var ws = null;
     var hasJoined = false;
     var isConnecting = false;
+    var isLeaving = false;
     var lastPresenceCount = null;
     var notifPermission = false;
     var messagesDiv = document.getElementById('messages');
@@ -197,12 +198,18 @@
 
     function leaveChat() {
       clearSession();
+      isLeaving = true;
       if (ws && ws.readyState === 1) {
         try {
-          ws.send(JSON.stringify({ type: 'leave' }));
-        } catch(e) {}
+          ws.send(JSON.stringify({ type: 'leave', name: userName, code: roomCode }));
+        } catch (e) {}
+        setTimeout(function() {
+          if (ws) { ws.close(); ws = null; }
+        }, 120);
+      } else if (ws) {
+        ws.close();
+        ws = null;
       }
-      if (ws) { ws.close(); ws = null; }
       hasJoined = false;
       isConnecting = false;
       lastPresenceCount = null;
@@ -240,6 +247,7 @@
           addSystemMessage('you hopped in');
           hasJoined = true;
         }
+        isLeaving = false;
       };
       ws.onmessage = function(event) {
         var data = JSON.parse(event.data);
@@ -249,7 +257,7 @@
         } else if (data.type === 'presence') {
           updatePresence(data.count);
         } else if (data.type === 'left') {
-          addSystemMessage((data.name || 'somebunny') + ' hopped away');
+          addSystemMessage(data.name + ' hopped away 🐇');
         } else if (data.type === 'system') {
           addSystemMessage(data.text);
         }
@@ -260,12 +268,15 @@
         statusDiv.className = 'disconnected';
         presenceDiv.textContent = '';
         presenceDiv.className = '';
-        // Only reconnect if session still exists (user hasn't explicitly left)
+        // Only reconnect if session still exists and the user did not explicitly leave
         try {
-          if (localStorage.getItem('bunnychat_session')) {
+          if (!isLeaving && localStorage.getItem('bunnychat_session')) {
             setTimeout(connectWebSocket, 3000);
           }
-        } catch(e) { setTimeout(connectWebSocket, 3000); }
+        } catch(e) {
+          if (!isLeaving) setTimeout(connectWebSocket, 3000);
+        }
+        isLeaving = false;
       };
       ws.onerror = function() {
         isConnecting = false;
@@ -325,6 +336,12 @@
     function escapeHtml(text) {
       return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
+
+    window.addEventListener('beforeunload', function() {
+      if (ws && ws.readyState === 1 && !isLeaving) {
+        try { ws.send(JSON.stringify({ type: 'leave', name: userName, code: roomCode })); } catch (e) {}
+      }
+    });
 
     // On load — auto-rejoin if session exists
     try {
