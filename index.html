@@ -171,6 +171,13 @@
       }
     }
 
+    function sendLeftNotif(name) {
+      if (!notifPermission || document.hasFocus()) return;
+      if ('Notification' in window && Notification.permission === 'granted') {
+        new Notification('bunnychat 🐰💬', { body: name + ' hopped away 🐇', icon: 'https://bunnychat.netlify.app/preview.png' });
+      }
+    }
+
     function saveSession(name, code) {
       try { localStorage.setItem('bunnychat_session', JSON.stringify({ name: name, code: code })); } catch(e) {}
     }
@@ -190,6 +197,7 @@
     function enterChat(name, code) {
       userName = name;
       roomCode = code;
+      isLeaving = false;
       saveSession(name, code);
       showChat();
       requestNotifPermission();
@@ -197,15 +205,13 @@
     }
 
     function leaveChat() {
-      clearSession();
       isLeaving = true;
+      clearSession();
       if (ws && ws.readyState === 1) {
-        try {
-          ws.send(JSON.stringify({ type: 'leave', name: userName, code: roomCode }));
-        } catch (e) {}
+        try { ws.send(JSON.stringify({ type: 'leave' })); } catch(e) {}
         setTimeout(function() {
           if (ws) { ws.close(); ws = null; }
-        }, 120);
+        }, 75);
       } else if (ws) {
         ws.close();
         ws = null;
@@ -247,7 +253,6 @@
           addSystemMessage('you hopped in');
           hasJoined = true;
         }
-        isLeaving = false;
       };
       ws.onmessage = function(event) {
         var data = JSON.parse(event.data);
@@ -258,6 +263,7 @@
           updatePresence(data.count);
         } else if (data.type === 'left') {
           addSystemMessage(data.name + ' hopped away 🐇');
+          sendLeftNotif(data.name);
         } else if (data.type === 'system') {
           addSystemMessage(data.text);
         }
@@ -268,15 +274,14 @@
         statusDiv.className = 'disconnected';
         presenceDiv.textContent = '';
         presenceDiv.className = '';
-        // Only reconnect if session still exists and the user did not explicitly leave
-        try {
-          if (!isLeaving && localStorage.getItem('bunnychat_session')) {
-            setTimeout(connectWebSocket, 3000);
-          }
-        } catch(e) {
-          if (!isLeaving) setTimeout(connectWebSocket, 3000);
+        // Only reconnect if session still exists and the user didn't explicitly leave
+        if (!isLeaving) {
+          try {
+            if (localStorage.getItem('bunnychat_session')) {
+              setTimeout(connectWebSocket, 3000);
+            }
+          } catch(e) { setTimeout(connectWebSocket, 3000); }
         }
-        isLeaving = false;
       };
       ws.onerror = function() {
         isConnecting = false;
@@ -336,12 +341,6 @@
     function escapeHtml(text) {
       return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
-
-    window.addEventListener('beforeunload', function() {
-      if (ws && ws.readyState === 1 && !isLeaving) {
-        try { ws.send(JSON.stringify({ type: 'leave', name: userName, code: roomCode })); } catch (e) {}
-      }
-    });
 
     // On load — auto-rejoin if session exists
     try {
