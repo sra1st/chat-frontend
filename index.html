@@ -268,15 +268,18 @@
     }
 
     function updatePresence(count) {
-      if (count >= 2) {
-        presenceDiv.textContent = '✦ somebunny is here';
-        presenceDiv.className = 'active';
-      } else {
-        presenceDiv.textContent = 'nobunny is here yet...';
-        presenceDiv.className = '';
-      }
-      lastPresenceCount = count;
-    }
+  if (count >= 2) {
+    presenceDiv.textContent = '✦ somebunny is here';
+    presenceDiv.className = 'active';
+  } else if (lastPresenceCount !== null && lastPresenceCount >= 2) {
+    presenceDiv.textContent = '';
+    presenceDiv.className = '';
+  } else {
+    presenceDiv.textContent = 'nobunny is here yet...';
+    presenceDiv.className = '';
+  }
+  lastPresenceCount = count;
+}
 
     function sendMessage() {
       var text = msgInput.value.trim();
