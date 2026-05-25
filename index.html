@@ -197,6 +197,11 @@
 
     function leaveChat() {
       clearSession();
+      if (ws && ws.readyState === 1) {
+        try {
+          ws.send(JSON.stringify({ type: 'leave' }));
+        } catch(e) {}
+      }
       if (ws) { ws.close(); ws = null; }
       hasJoined = false;
       isConnecting = false;
@@ -243,6 +248,8 @@
           sendNotif(data.name);
         } else if (data.type === 'presence') {
           updatePresence(data.count);
+        } else if (data.type === 'left') {
+          addSystemMessage((data.name || 'somebunny') + ' hopped away');
         } else if (data.type === 'system') {
           addSystemMessage(data.text);
         }
