@@ -196,11 +196,15 @@
       }
     }
 
-    function sendNotif(name) {
+    function sendBodyNotif(body) {
       if (!notifPermission || document.hasFocus()) return;
       if ('Notification' in window && Notification.permission === 'granted') {
-        new Notification('bunnychat 🐰💬', { body: name + ' sent you a message', icon: 'https://bunnychat.netlify.app/preview.png' });
+        new Notification('bunnychat 🐰💬', { body: body, icon: 'https://bunnychat.netlify.app/preview.png' });
       }
+    }
+
+    function sendNotif(name) {
+      sendBodyNotif(name + ' sent you a message');
     }
 
     function saveSession(name, code) {
@@ -268,6 +272,9 @@
     function leaveChat() {
       clearSession();
       clearHistory();
+      if (ws && ws.readyState === 1) {
+        try { ws.send(JSON.stringify({ type: 'leave' })); } catch(e) {}
+      }
       if (ws) { ws.close(); ws = null; }
       hasJoined = false;
       isConnecting = false;
@@ -314,10 +321,14 @@
           sendNotif(data.name);
         } else if (data.type === 'presence') {
           updatePresence(data.count);
+        } else if (data.type === 'left') {
+          var leftText = data.name + ' hopped away 🐇';
+          addSystemMessage(leftText);
+          sendBodyNotif(leftText);
         } else if (data.type === 'system') {
           addSystemMessage(data.text);
           if (data.text && data.text.indexOf('hopped away') !== -1) {
-            sendNotif(data.text);
+            sendBodyNotif(data.text);
           }
         }
       };
