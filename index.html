@@ -15,7 +15,7 @@
     html, body { height: 100%; overflow: hidden; }
     body { font-family: -apple-system, Helvetica, Arial, sans-serif; background: #c97ee8; color: #fff; }
 
-    #stars { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 101; overflow: hidden; }
+    #stars { position: fixed; top: 0; left: 0; right: 0; bottom: 0; pointer-events: none; z-index: 0; overflow: hidden; }
     .star { position: absolute; color: rgba(255,255,255,0.95); -webkit-animation: twinkle 2s infinite; animation: twinkle 2s infinite; }
     @-webkit-keyframes twinkle { 0%,100%{opacity:0.08;-webkit-transform:scale(0.7)} 50%{opacity:1;-webkit-transform:scale(1.6)} }
     @keyframes twinkle { 0%,100%{opacity:0.08;transform:scale(0.7)} 50%{opacity:1;transform:scale(1.6)} }
@@ -93,7 +93,7 @@
     #presence { font-size: 11px; margin-top: 2px; letter-spacing: 1px; color: rgba(255,255,255,0.45); }
     #presence.active { color: rgba(255,255,255,0.9); }
 
-    #messages { -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; overflow-y: auto; padding: 8px 20px; -webkit-overflow-scrolling: touch; }
+    #messages { -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; overflow-y: auto; padding: 8px 20px; -webkit-overflow-scrolling: touch; position: relative; z-index: 1; }
 
     .message { margin-bottom: 14px; max-width: 78%; word-wrap: break-word; position: relative; }
     .message.sent { margin-left: auto; text-align: right; }
@@ -106,14 +106,135 @@
     .message.received:after { left: -12px; }
 
     .bubble { display: inline-block; padding: 10px 16px; border-radius: 20px; font-size: 15px; line-height: 1.5; color: #fff; }
-    .sent .bubble { background: rgba(255,255,255,0.38); border: 1px solid rgba(255,255,255,0.5); border-bottom-right-radius: 5px; }
-    .received .bubble { background: rgba(255,255,255,0.28); border: 1px solid rgba(255,255,255,0.38); border-bottom-left-radius: 5px; }
+    .sent .bubble { background: rgba(96, 41, 138, 0.92); border: 1px solid rgba(255,255,255,0.18); border-bottom-right-radius: 5px; box-shadow: 0 10px 22px rgba(53, 9, 82, 0.22); }
+    .received .bubble { background: rgba(70, 22, 103, 0.92); border: 1px solid rgba(255,255,255,0.18); border-bottom-left-radius: 5px; box-shadow: 0 10px 22px rgba(53, 9, 82, 0.22); }
     .bubble strong { font-size: 11px; opacity: 0.7; letter-spacing: 0.5px; text-transform: uppercase; display: block; margin-bottom: 2px; }
     .message .time { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 4px; letter-spacing: 0.5px; }
 
     .system-msg { text-align: center; font-size: 11px; color: rgba(255,255,255,0.45); margin: 6px 0; letter-spacing: 1px; }
     .system-msg:before { content: '✦ '; }
     .system-msg:after { content: ' ✦'; }
+
+
+    #typing { min-height: 16px; padding: 0 18px 4px; text-align: center; font-size: 11px; color: rgba(255,255,255,0.72); letter-spacing: 0.7px; }
+    #reply-preview {
+      display: none;
+      margin: 0 14px 6px;
+      padding: 10px 12px;
+      border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 16px;
+      background: rgba(74, 24, 109, 0.92);
+      box-shadow: 0 10px 20px rgba(53, 9, 82, 0.18);
+      color: #fff;
+    }
+    #reply-preview .replying-to {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      opacity: 0.75;
+      margin-bottom: 4px;
+    }
+    #reply-preview .reply-snippet {
+      font-size: 12px;
+      line-height: 1.4;
+      opacity: 0.96;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
+    #reply-preview .reply-actions {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    #reply-preview .cancel-reply {
+      margin-left: auto;
+      background: rgba(255,255,255,0.16);
+      border: 1px solid rgba(255,255,255,0.16);
+      color: #fff;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 11px;
+      cursor: pointer;
+      -webkit-appearance: none;
+    }
+
+    .message .bubble-wrap {
+      position: relative;
+      display: inline-block;
+      max-width: 100%;
+    }
+    .message .reply-btn {
+      position: absolute;
+      top: -6px;
+      right: -8px;
+      border: 1px solid rgba(255,255,255,0.18);
+      background: rgba(74, 24, 109, 0.95);
+      color: #fff;
+      border-radius: 999px;
+      width: 26px;
+      height: 26px;
+      font-size: 12px;
+      cursor: pointer;
+      opacity: 0;
+      -webkit-appearance: none;
+      transition: opacity 0.15s ease, transform 0.15s ease;
+    }
+    .message:hover .reply-btn, .message:focus-within .reply-btn { opacity: 1; transform: scale(1.02); }
+    .message.sent .reply-btn { right: auto; left: -8px; }
+    .message .reply-btn:active { transform: scale(0.96); }
+    .reply-quote {
+      border-left: 2px solid rgba(255,255,255,0.30);
+      padding-left: 8px;
+      margin-bottom: 6px;
+      font-size: 11px;
+      opacity: 0.82;
+    }
+    .reply-quote strong {
+      display: block;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.7px;
+      margin-bottom: 2px;
+      opacity: 0.85;
+    }
+    .message-meta {
+      display: -webkit-box;
+      display: -webkit-flex;
+      display: flex;
+      gap: 8px;
+      -webkit-box-align: center;
+      -webkit-align-items: center;
+      align-items: center;
+      margin-top: 4px;
+      color: rgba(255,255,255,0.72);
+      font-size: 10px;
+      letter-spacing: 0.5px;
+      justify-content: flex-end;
+    }
+    .message.received .message-meta { justify-content: flex-start; }
+    .receipt {
+      opacity: 0.9;
+      text-transform: lowercase;
+    }
+    .typing-dot {
+      display: inline-block;
+      width: 4px;
+      height: 4px;
+      margin: 0 1px;
+      border-radius: 50%;
+      background: rgba(255,255,255,0.76);
+      animation: typingPulse 1s infinite ease-in-out;
+    }
+    @keyframes typingPulse {
+      0%, 80%, 100% { transform: scale(0.65); opacity: 0.45; }
+      40% { transform: scale(1); opacity: 1; }
+    }
 
     #input-area { padding: 10px 14px 16px; display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-align: center; -webkit-align-items: center; align-items: center; -webkit-flex-shrink: 0; flex-shrink: 0; gap: 10px; }
     #msg-input { -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.35); border-radius: 24px; padding: 11px 18px; color: #fff; font-size: 15px; outline: none; -webkit-appearance: none; }
@@ -131,7 +252,7 @@
     <div class="subtitle">end-to-end decrypted &nbsp;|&nbsp; no logs</div>
     <div class="field-label">your name</div>
     <input type="text" id="name-input" placeholder="enter your name" maxlength="20">
-    <div class="field-label">bunny pass 🔑</div>
+    <div class="field-label">bunny code 🔑</div>
     <input type="text" id="code-input" placeholder="enter or make your secret code" maxlength="40">
     <p style="font-size:10px;color:rgba(255,255,255,0.45);max-width:380px;text-align:center;margin-top:-8px;margin-bottom:8px;letter-spacing:0.5px;">same code = same garden | share it with your bunny 🐇</p>
     <button id="join-btn">✦ enter ✦</button>
@@ -146,13 +267,16 @@
       <div id="presence"></div>
     </div>
     <div id="messages"></div>
+    <div id="reply-preview"></div>
+    <div id="typing"></div>
     <div id="input-area">
       <input type="text" id="msg-input" placeholder="say hi!">
       <button id="send-btn">✦</button>
     </div>
   </div>
 
-  <script>
+  
+<script>
     var WS_URL = 'wss://chat-backend-2ri0.onrender.com';
 
     var starData = [
@@ -175,6 +299,18 @@
       sc.appendChild(s);
     }
 
+    function goBack() {
+      if (ws) { ws.close(); ws = null; }
+      hasJoined = false;
+      isConnecting = false;
+      clearTypingState();
+      clearReplyTarget();
+      document.getElementById('messages').innerHTML = '';
+      document.getElementById('name-screen').style.display = 'flex';
+      document.getElementById('name-input').value = '';
+      document.getElementById('code-input').value = '';
+    }
+
     var userName = '';
     var roomCode = '';
     var ws = null;
@@ -185,8 +321,15 @@
     var messagesDiv = document.getElementById('messages');
     var statusDiv = document.getElementById('status');
     var presenceDiv = document.getElementById('presence');
+    var typingDiv = document.getElementById('typing');
+    var replyPreviewDiv = document.getElementById('reply-preview');
     var msgInput = document.getElementById('msg-input');
     var messageHistory = [];
+    var messageElements = {};
+    var typingUsers = {};
+    var typingTimer = null;
+    var typingClearTimer = null;
+    var replyTarget = null;
 
     function requestNotifPermission() {
       if ('Notification' in window && Notification.permission === 'default') {
@@ -242,20 +385,32 @@
 
     function clearHistory() {
       messageHistory = [];
+      messageElements = {};
       try { localStorage.removeItem(historyKey()); } catch(e) {}
+    }
+
+    function formatTime(timeValue) {
+      var date = timeValue ? new Date(timeValue) : new Date();
+      if (isNaN(date.getTime())) date = new Date();
+      var hours = date.getHours();
+      var minutes = date.getMinutes();
+      return hours + ':' + (minutes < 10 ? '0' : '') + minutes;
     }
 
     function renderHistory() {
       messagesDiv.innerHTML = '';
+      messageElements = {};
       for (var i = 0; i < messageHistory.length; i++) {
         var item = messageHistory[i];
         if (item.type === 'message') {
-          addMessage(item.name, item.text, item.isSent, false);
+          addMessage(item, false);
         } else if (item.type === 'system') {
           addSystemMessage(item.text, false);
         }
       }
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      updateTypingIndicator();
+      renderReplyPreview();
     }
 
     function enterChat(name, code) {
@@ -279,6 +434,8 @@
       hasJoined = false;
       isConnecting = false;
       lastPresenceCount = null;
+      clearTypingState();
+      clearReplyTarget();
       messagesDiv.innerHTML = '';
       document.getElementById('name-input').value = '';
       document.getElementById('code-input').value = '';
@@ -289,7 +446,7 @@
       var name = document.getElementById('name-input').value.trim();
       var code = document.getElementById('code-input').value.trim();
       if (!name) { alert('please enter your name'); return; }
-      if (!code) { alert('please enter your bunny pass'); return; }
+      if (!code) { alert('please enter your bunny code'); return; }
       enterChat(name, code);
     });
 
@@ -317,19 +474,43 @@
       ws.onmessage = function(event) {
         var data = JSON.parse(event.data);
         if (data.type === 'message') {
-          addMessage(data.name, data.text, false);
-          sendNotif(data.name);
+          addMessage({
+            id: data.id,
+            name: data.name,
+            text: data.text,
+            time: data.time,
+            replyTo: data.replyTo || null,
+            isSent: data.name === userName,
+            readState: data.readState || 'sent'
+          }, true);
+          if (data.name !== userName) {
+            sendNotif(data.name);
+            acknowledgeRead(data.id);
+          }
         } else if (data.type === 'presence') {
           updatePresence(data.count);
         } else if (data.type === 'left') {
           var leftText = data.name + ' hopped away 🐇';
           addSystemMessage(leftText);
           sendBodyNotif(leftText);
+          delete typingUsers[data.name];
+          updateTypingIndicator();
         } else if (data.type === 'system') {
           addSystemMessage(data.text);
           if (data.text && data.text.indexOf('hopped away') !== -1) {
             sendBodyNotif(data.text);
           }
+        } else if (data.type === 'typing') {
+          if (data.name && data.name !== userName) {
+            if (data.isTyping) {
+              typingUsers[data.name] = true;
+            } else {
+              delete typingUsers[data.name];
+            }
+            updateTypingIndicator();
+          }
+        } else if (data.type === 'read') {
+          markMessageRead(data.id, data.by);
         }
       };
       ws.onclose = function() {
@@ -338,6 +519,7 @@
         statusDiv.className = 'disconnected';
         presenceDiv.textContent = '';
         presenceDiv.className = '';
+        clearTypingState();
         // Only reconnect if session still exists (user hasn't explicitly left)
         try {
           if (localStorage.getItem('bunnychat_session')) {
@@ -353,46 +535,210 @@
     }
 
     function updatePresence(count) {
-  if (count >= 2) {
-    presenceDiv.textContent = '✦ somebunny is here';
-    presenceDiv.className = 'active';
-  } else if (lastPresenceCount !== null && lastPresenceCount >= 2) {
-    presenceDiv.textContent = '';
-    presenceDiv.className = '';
-  } else {
-    presenceDiv.textContent = 'nobunny is here yet...';
-    presenceDiv.className = '';
-  }
-  lastPresenceCount = count;
-}
+      if (count >= 2) {
+        presenceDiv.textContent = '✦ somebunny is here';
+        presenceDiv.className = 'active';
+      } else if (lastPresenceCount !== null && lastPresenceCount >= 2) {
+        presenceDiv.textContent = '';
+        presenceDiv.className = '';
+      } else {
+        presenceDiv.textContent = 'nobunny is here yet...';
+        presenceDiv.className = '';
+      }
+      lastPresenceCount = count;
+    }
+
+    function clearTypingState() {
+      typingUsers = {};
+      updateTypingIndicator();
+      if (typingTimer) { clearTimeout(typingTimer); typingTimer = null; }
+      if (typingClearTimer) { clearTimeout(typingClearTimer); typingClearTimer = null; }
+      if (ws && ws.readyState === 1) {
+        try { ws.send(JSON.stringify({ type: 'typing', isTyping: false })); } catch(e) {}
+      }
+    }
+
+    function updateTypingIndicator() {
+      var names = [];
+      for (var key in typingUsers) {
+        if (typingUsers.hasOwnProperty(key) && typingUsers[key]) names.push(key);
+      }
+      if (!names.length) {
+        typingDiv.textContent = '';
+        return;
+      }
+      if (names.length === 1) {
+        typingDiv.textContent = names[0] + ' is typing...';
+      } else if (names.length === 2) {
+        typingDiv.textContent = names[0] + ' and ' + names[1] + ' are typing...';
+      } else {
+        typingDiv.textContent = 'somebunny is typing...';
+      }
+    }
+
+    function sendTypingState(isTyping) {
+      if (!ws || ws.readyState !== 1) return;
+      try { ws.send(JSON.stringify({ type: 'typing', isTyping: !!isTyping })); } catch(e) {}
+    }
+
+    function scheduleTypingStop() {
+      if (typingTimer) clearTimeout(typingTimer);
+      typingTimer = setTimeout(function() {
+        typingTimer = null;
+        sendTypingState(false);
+      }, 1200);
+    }
+
+    function setReplyTarget(item) {
+      replyTarget = {
+        id: item.id || '',
+        name: item.name || '',
+        text: item.text || '',
+        time: item.time || ''
+      };
+      renderReplyPreview();
+    }
+
+    function clearReplyTarget() {
+      replyTarget = null;
+      renderReplyPreview();
+    }
+
+    function renderReplyPreview() {
+      if (!replyTarget) {
+        replyPreviewDiv.style.display = 'none';
+        replyPreviewDiv.innerHTML = '';
+        return;
+      }
+      replyPreviewDiv.style.display = 'block';
+      replyPreviewDiv.innerHTML =
+        '<div class="replying-to">replying to ' + escapeHtml(replyTarget.name || 'somebunny') + '</div>' +
+        '<div class="reply-snippet">' + escapeHtml(replyTarget.text || '') + '</div>' +
+        '<div class="reply-actions"><button type="button" class="cancel-reply">cancel</button></div>';
+      var cancel = replyPreviewDiv.querySelector('.cancel-reply');
+      if (cancel) {
+        cancel.addEventListener('click', clearReplyTarget);
+      }
+    }
+
+    function acknowledgeRead(id) {
+      if (!id || !ws || ws.readyState !== 1) return;
+      try { ws.send(JSON.stringify({ type: 'read', id: id })); } catch(e) {}
+    }
+
+    function markMessageRead(id, by) {
+      if (!id) return;
+      for (var i = 0; i < messageHistory.length; i++) {
+        var item = messageHistory[i];
+        if (item.type === 'message' && item.id === id) {
+          item.readState = 'read';
+          if (!item.readBy) item.readBy = [];
+          if (by && item.readBy.indexOf(by) === -1) item.readBy.push(by);
+          break;
+        }
+      }
+      var entry = messageElements[id];
+      if (entry) {
+        var receipt = entry.querySelector('.receipt');
+        if (receipt) receipt.textContent = 'read';
+      }
+      saveHistory();
+    }
 
     function sendMessage() {
       var text = msgInput.value.trim();
       if (!text || !ws || ws.readyState !== 1) return;
-      ws.send(JSON.stringify({ type: 'message', text: text }));
-      addMessage(userName, text, true);
+      var id = 'm_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
+      var time = new Date().toISOString();
+      var replyTo = replyTarget ? {
+        id: replyTarget.id,
+        name: replyTarget.name,
+        text: replyTarget.text,
+        time: replyTarget.time
+      } : null;
+      var payload = { type: 'message', id: id, text: text, time: time, replyTo: replyTo };
+      ws.send(JSON.stringify(payload));
+      addMessage({
+        id: id,
+        name: userName,
+        text: text,
+        time: time,
+        replyTo: replyTo,
+        isSent: true,
+        readState: 'sent'
+      }, true);
       msgInput.value = '';
+      sendTypingState(false);
+      if (typingTimer) { clearTimeout(typingTimer); typingTimer = null; }
+      clearReplyTarget();
     }
 
     document.getElementById('send-btn').addEventListener('click', sendMessage);
     msgInput.addEventListener('keydown', function(e) { if (e.keyCode === 13) sendMessage(); });
+    msgInput.addEventListener('input', function() {
+      var hasText = msgInput.value.trim().length > 0;
+      if (hasText) {
+        sendTypingState(true);
+        scheduleTypingStop();
+      } else {
+        sendTypingState(false);
+        if (typingTimer) { clearTimeout(typingTimer); typingTimer = null; }
+      }
+    });
+    msgInput.addEventListener('blur', function() {
+      sendTypingState(false);
+      if (typingTimer) { clearTimeout(typingTimer); typingTimer = null; }
+    });
 
-    function addMessage(name, text, isSent, shouldPersist) {
+    function addMessage(item, shouldPersist) {
       if (shouldPersist === undefined) shouldPersist = true;
-      var now = new Date();
-      var time = now.getHours() + ':' + (now.getMinutes() < 10 ? '0' : '') + now.getMinutes();
       var div = document.createElement('div');
-      div.className = 'message ' + (isSent ? 'sent' : 'received');
+      div.className = 'message ' + (item.isSent ? 'sent' : 'received');
+      if (item.id) {
+        messageElements[item.id] = div;
+      }
+      var replyMarkup = '';
+      if (item.replyTo && item.replyTo.text) {
+        replyMarkup =
+          '<div class="reply-quote">' +
+            '<strong>' + escapeHtml(item.replyTo.name || 'reply') + '</strong>' +
+            '<div>' + escapeHtml(item.replyTo.text) + '</div>' +
+          '</div>';
+      }
       div.innerHTML =
-        '<div class="bubble">' +
-          (isSent ? '' : '<strong>' + escapeHtml(name) + '</strong>') +
-          escapeHtml(text) +
+        '<div class="bubble-wrap">' +
+          '<button type="button" class="reply-btn" aria-label="reply">↩</button>' +
+          '<div class="bubble">' +
+            replyMarkup +
+            escapeHtml(item.text) +
+          '</div>' +
         '</div>' +
-        '<div class="time">' + time + '</div>';
+        '<div class="message-meta">' +
+          '<span class="time">' + formatTime(item.time) + '</span>' +
+          (item.isSent ? '<span class="receipt">' + escapeHtml(item.readState || 'sent') + '</span>' : '') +
+        '</div>';
+      var replyBtn = div.querySelector('.reply-btn');
+      if (replyBtn) {
+        replyBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          setReplyTarget(item);
+        });
+      }
       messagesDiv.appendChild(div);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
       if (shouldPersist) {
-        messageHistory.push({ type: 'message', name: name, text: text, isSent: isSent, time: time });
+        var existingIndex = -1;
+        for (var j = 0; j < messageHistory.length; j++) {
+          if (messageHistory[j].type === 'message' && messageHistory[j].id === item.id) {
+            existingIndex = j;
+            break;
+          }
+        }
+        if (existingIndex >= 0) {
+          messageHistory[existingIndex] = item;
+        } else {
+          messageHistory.push(item);
+        }
         saveHistory();
       }
     }
@@ -411,7 +757,7 @@
     }
 
     function escapeHtml(text) {
-      return text.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+      return String(text || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
     }
 
     // On load — auto-rejoin if session exists
@@ -424,5 +770,8 @@
       }
     } catch(e) {}
   </script>
+</body>
+</html>
+
 </body>
 </html>
