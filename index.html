@@ -416,19 +416,10 @@
     function enterChat(name, code) {
       userName = name;
       roomCode = code;
-
       saveSession(name, code);
-
       messageHistory = loadHistory();
-
-      // Restore whether the join notice already exists for this room
-      hasJoined = messageHistory.some(function(item) {
-        return item.type === 'system' && item.text === 'you hopped in';
-      });
-
       showChat();
       renderHistory();
-
       requestNotifPermission();
       connectWebSocket();
     }
@@ -478,7 +469,6 @@
         if (!hasJoined) {
           addSystemMessage('you hopped in');
           hasJoined = true;
-          saveHistory();
         }
       };
       ws.onmessage = function(event) {
