@@ -402,7 +402,7 @@
       messageElements = {};
       for (var i = 0; i < messageHistory.length; i++) {
         var item = messageHistory[i];
-        if (item.type === 'message') {
+        if (item.type === 'message' || (!item.type && item.id)) {
           addMessage(item, false);
         } else if (item.type === 'system') {
           addSystemMessage(item.text, false);
@@ -467,7 +467,7 @@
         statusDiv.className = 'connected';
         ws.send(JSON.stringify({ type: 'join', name: userName, code: roomCode }));
         if (!hasJoined) {
-          addSystemMessage('you hopped in');
+          addSystemMessage('you hopped in', false);
           hasJoined = true;
         }
       };
@@ -630,7 +630,7 @@
       if (!id) return;
       for (var i = 0; i < messageHistory.length; i++) {
         var item = messageHistory[i];
-        if (item.type === 'message' && item.id === id) {
+        if ((item.type === 'message' || !item.type) && item.id === id) {
           item.readState = 'read';
           if (!item.readBy) item.readBy = [];
           if (by && item.readBy.indexOf(by) === -1) item.readBy.push(by);
@@ -727,17 +727,22 @@
       messagesDiv.appendChild(div);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
       if (shouldPersist) {
+        // Always stamp type so renderHistory can match it on reload
+        var storeItem = {};
+        for (var k in item) { if (item.hasOwnProperty(k)) storeItem[k] = item[k]; }
+        storeItem.type = 'message';
         var existingIndex = -1;
         for (var j = 0; j < messageHistory.length; j++) {
-          if (messageHistory[j].type === 'message' && messageHistory[j].id === item.id) {
+          var h = messageHistory[j];
+          if ((h.type === 'message' || !h.type) && h.id && h.id === item.id) {
             existingIndex = j;
             break;
           }
         }
         if (existingIndex >= 0) {
-          messageHistory[existingIndex] = item;
+          messageHistory[existingIndex] = storeItem;
         } else {
-          messageHistory.push(item);
+          messageHistory.push(storeItem);
         }
         saveHistory();
       }
