@@ -106,7 +106,7 @@
     .message.sent:after { right: -6px; }
     .message.received:after { left: -6px; }
 
-    .bubble { display: inline-block; padding: 10px 16px; border-radius: 20px; font-size: 15px; line-height: 1.5; color: #fff; }
+    .bubble { display: inline-block; padding: 10px 16px; border-radius: 20px; font-size: 15px; line-height: 1.5; color: #fff; max-width: 100%; word-break: break-word; overflow-wrap: anywhere; text-align: left; }
     .sent .bubble { background: rgba(96, 41, 138, 0.92); border: 1px solid rgba(255,255,255,0.18); border-bottom-right-radius: 5px; box-shadow: 0 10px 22px rgba(53, 9, 82, 0.22); }
     .received .bubble { background: rgba(70, 22, 103, 0.92); border: 1px solid rgba(255,255,255,0.18); border-bottom-left-radius: 5px; box-shadow: 0 10px 22px rgba(53, 9, 82, 0.22); }
     .bubble strong { font-size: 11px; opacity: 0.7; letter-spacing: 0.5px; text-transform: uppercase; display: block; margin-bottom: 2px; }
@@ -245,6 +245,17 @@
     #send-btn { background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.5); border-radius: 50%; width: 44px; height: 44px; color: rgba(48,8,86,0.92); font-size: 20px; cursor: pointer; -webkit-flex-shrink: 0; flex-shrink: 0; -webkit-appearance: none; display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-align: center; -webkit-align-items: center; align-items: center; -webkit-box-pack: center; -webkit-justify-content: center; justify-content: center; padding: 0; }
     #send-btn:active { background: rgba(255,255,255,0.45); }
     #send-btn svg { width: 24px; height: 24px; display: block; }
+
+    /* ── Desktop: messages span full screen width ── */
+    @media (min-width: 680px) {
+      #app { max-width: 100%; }
+      #header { max-width: 740px; margin-left: auto; margin-right: auto; width: 100%; box-sizing: border-box; }
+      #reply-preview { max-width: 740px; margin-left: auto; margin-right: auto; }
+      #typing  { max-width: 740px; margin-left: auto; margin-right: auto; }
+      #input-area { max-width: 740px; margin-left: auto; margin-right: auto; }
+      #messages { padding-left: 32px; padding-right: 32px; }
+      .message { max-width: 52%; }
+    }
 
     /* ── Reaction button (☺) shown in message-meta ── */
     .react-btn {
