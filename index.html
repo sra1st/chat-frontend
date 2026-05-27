@@ -93,17 +93,18 @@
     #presence { font-size: 11px; margin-top: 2px; letter-spacing: 1px; color: rgba(255,255,255,0.45); }
     #presence.active { color: rgba(255,255,255,0.9); }
 
-    #messages { -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; overflow-y: auto; padding: 8px 20px; -webkit-overflow-scrolling: touch; position: relative; z-index: 1; }
+    #messages { -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; overflow-y: auto; overflow-x: hidden; padding: 8px 16px 8px 18px; -webkit-overflow-scrolling: touch; position: relative; z-index: 1; scrollbar-width: none; }
+    #messages::-webkit-scrollbar { display: none; }
 
-    .message { margin-bottom: 14px; max-width: 78%; word-wrap: break-word; position: relative; }
+    .message { margin-bottom: 14px; max-width: 72%; word-wrap: break-word; overflow-wrap: break-word; position: relative; }
     .message.sent { margin-left: auto; text-align: right; }
     .message.received { margin-right: auto; text-align: left; }
     .message:before { content: '✦'; position: absolute; font-size: 8px; color: rgba(255,255,255,0.6); top: -4px; }
     .message.sent:before { right: 0px; }
     .message.received:before { left: 0px; }
     .message:after { content: '✧'; position: absolute; font-size: 6px; color: rgba(255,255,255,0.35); bottom: 8px; }
-    .message.sent:after { right: -12px; }
-    .message.received:after { left: -12px; }
+    .message.sent:after { right: -6px; }
+    .message.received:after { left: -6px; }
 
     .bubble { display: inline-block; padding: 10px 16px; border-radius: 20px; font-size: 15px; line-height: 1.5; color: #fff; }
     .sent .bubble { background: rgba(96, 41, 138, 0.92); border: 1px solid rgba(255,255,255,0.18); border-bottom-right-radius: 5px; box-shadow: 0 10px 22px rgba(53, 9, 82, 0.22); }
@@ -241,8 +242,84 @@
     #input-area { padding: 10px 14px 16px; display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-align: end; -webkit-align-items: flex-end; align-items: flex-end; -webkit-flex-shrink: 0; flex-shrink: 0; gap: 10px; }
     #msg-input { -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; background: rgba(80,20,120,0.55); border: 1px solid rgba(255,255,255,0.35); border-radius: 24px; padding: 11px 18px; color: #fff; font-size: 15px; outline: none; -webkit-appearance: none; resize: none; overflow-y: hidden; min-height: 44px; max-height: 130px; line-height: 1.45; font-family: inherit; display: block; }
     #msg-input::-webkit-input-placeholder { color: rgba(255,255,255,0.5); }
-    #send-btn { background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.5); border-radius: 50%; width: 42px; height: 42px; color: #fff; font-size: 20px; cursor: pointer; -webkit-flex-shrink: 0; flex-shrink: 0; -webkit-appearance: none; display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-align: center; -webkit-align-items: center; align-items: center; -webkit-box-pack: center; -webkit-justify-content: center; justify-content: center; }
+    #send-btn { background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.5); border-radius: 50%; width: 44px; height: 44px; color: rgba(48,8,86,0.92); font-size: 20px; cursor: pointer; -webkit-flex-shrink: 0; flex-shrink: 0; -webkit-appearance: none; display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-align: center; -webkit-align-items: center; align-items: center; -webkit-box-pack: center; -webkit-justify-content: center; justify-content: center; padding: 0; }
     #send-btn:active { background: rgba(255,255,255,0.45); }
+    #send-btn svg { width: 24px; height: 24px; display: block; }
+
+    /* ── Reaction button (☺) shown in message-meta ── */
+    .react-btn {
+      background: none; border: none; color: rgba(255,255,255,0.45);
+      font-size: 13px; cursor: pointer; padding: 0 2px; line-height: 1;
+      opacity: 0; transition: opacity 0.15s; -webkit-appearance: none;
+      flex-shrink: 0;
+    }
+    .message:hover .react-btn, .message:focus-within .react-btn { opacity: 1; }
+    .react-btn:hover { color: rgba(255,255,255,0.9); }
+
+    /* ── Reaction pills ── */
+    .reactions { display: -webkit-box; display: -webkit-flex; display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
+    .message.sent .reactions { -webkit-box-pack: end; -webkit-justify-content: flex-end; justify-content: flex-end; }
+    .message.received .reactions { -webkit-box-pack: start; -webkit-justify-content: flex-start; justify-content: flex-start; }
+    .reaction-pill {
+      background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.22);
+      border-radius: 20px; padding: 2px 7px; font-size: 13px; color: #fff;
+      cursor: pointer; display: -webkit-inline-box; display: -webkit-inline-flex; display: inline-flex;
+      -webkit-box-align: center; -webkit-align-items: center; align-items: center;
+      gap: 3px; line-height: 1.4; -webkit-appearance: none; transition: background 0.12s;
+    }
+    .reaction-pill.reacted { background: rgba(255,255,255,0.26); border-color: rgba(255,255,255,0.5); }
+    .reaction-pill:active { background: rgba(255,255,255,0.35); }
+
+    /* ── Desktop reaction picker (5 emojis) ── */
+    .reaction-picker {
+      position: fixed; z-index: 300;
+      background: rgba(58,12,100,0.97); border: 1px solid rgba(255,255,255,0.18);
+      border-radius: 36px; padding: 6px 10px;
+      display: -webkit-box; display: -webkit-flex; display: flex; gap: 2px;
+      box-shadow: 0 8px 28px rgba(0,0,0,0.35);
+      animation: pickerPop 0.14s ease;
+    }
+    @keyframes pickerPop { from { opacity:0; transform:scale(0.75); } to { opacity:1; transform:scale(1); } }
+    .reaction-picker button {
+      background: none; border: none; font-size: 24px; cursor: pointer;
+      padding: 4px 5px; border-radius: 10px; line-height: 1; transition: transform 0.1s;
+      -webkit-appearance: none;
+    }
+    .reaction-picker button:hover { transform: scale(1.35); background: rgba(255,255,255,0.08); }
+    .reaction-picker button:active { transform: scale(1.1); }
+
+    /* ── Mobile emoji bottom sheet ── */
+    #emoji-sheet-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.28); z-index: 298; display: none;
+    }
+    #emoji-sheet-overlay.open { display: block; }
+    #emoji-sheet {
+      position: fixed; bottom: 0; left: 0; right: 0; z-index: 299;
+      background: rgba(52,8,92,0.98);
+      border-top: 1px solid rgba(255,255,255,0.12);
+      border-radius: 22px 22px 0 0;
+      max-height: 52vh; overflow-y: auto;
+      padding: 0 10px 24px;
+      transform: translateY(100%); transition: transform 0.24s ease;
+      scrollbar-width: none;
+    }
+    #emoji-sheet::-webkit-scrollbar { display: none; }
+    #emoji-sheet.open { transform: translateY(0); }
+    #emoji-sheet-handle {
+      width: 38px; height: 4px; background: rgba(255,255,255,0.22);
+      border-radius: 2px; margin: 12px auto 10px;
+    }
+    #emoji-sheet-grid {
+      display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px;
+    }
+    #emoji-sheet-grid button {
+      background: none; border: none; font-size: 28px; cursor: pointer;
+      padding: 6px 4px; border-radius: 10px; line-height: 1; -webkit-appearance: none;
+      display: -webkit-box; display: -webkit-flex; display: flex;
+      -webkit-box-align: center; -webkit-align-items: center; align-items: center;
+      -webkit-box-pack: center; -webkit-justify-content: center; justify-content: center;
+    }
+    #emoji-sheet-grid button:active { background: rgba(255,255,255,0.12); }
   </style>
 </head>
 <body>
@@ -273,12 +350,23 @@
     <div id="typing"></div>
     <div id="input-area">
       <textarea id="msg-input" placeholder="say hi!" rows="1"></textarea>
-      <button id="send-btn">🐰</button>
+      <button id="send-btn" aria-label="send">
+        <svg viewBox="0 0 100 115" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <ellipse cx="31" cy="32" rx="13.5" ry="30" transform="rotate(-10 31 32)"/>
+          <ellipse cx="69" cy="32" rx="13.5" ry="30" transform="rotate(10 69 32)"/>
+          <circle cx="50" cy="84" r="30"/>
+        </svg>
+      </button>
     </div>
   </div>
 
-  
-<script>
+  <div id="emoji-sheet-overlay"></div>
+  <div id="emoji-sheet">
+    <div id="emoji-sheet-handle"></div>
+    <div id="emoji-sheet-grid"></div>
+  </div>
+
+  <script>
     var WS_URL = 'wss://chat-backend-2ri0.onrender.com';
 
     var starData = [
@@ -332,6 +420,174 @@
     var typingTimer = null;
     var typingClearTimer = null;
     var replyTarget = null;
+
+    // ── Emoji Reactions ──────────────────────────────────────────────────────
+    var isMobile = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+    var activePickerMsgId = null;
+    var longPressTimer = null;
+
+    var EMOJI_LIST = [
+      '😀','😃','😄','😁','😆','😅','🤣','😂','🙂','🙃','😉','😊','😇',
+      '🥰','😍','🤩','😘','😗','😚','😙','😋','😛','😜','😝','🤑','🤗',
+      '🤭','🤫','🤔','🤐','🤨','😐','😑','😶','😏','😒','🙄','😬','🤥',
+      '😌','😔','😪','🤤','😴','😷','🤒','🤕','🤢','🤮','🤧','🥵','🥶',
+      '😵','🤯','🤠','🥳','😎','🤓','🧐','😕','😟','🙁','☹️','😮','😯',
+      '😲','😳','🥺','😦','😧','😨','😰','😥','😢','😭','😱','😖','😣',
+      '😞','😓','😩','😫','🤬','😤','😠','😡','🤡','👿','💀','💩','👻',
+      '👽','🤖','😺','😸','😹','😻','😼','😽','🙀','😿','😾',
+      '👍','👎','👊','✊','🤛','🤜','🤞','✌️','🤟','🤘','👌','🤌','🤏',
+      '👈','👉','👆','👇','☝️','👋','🤚','🖐️','✋','🖖','🤙','💪','🙏',
+      '👏','🙌','🤲','💅','🫶',
+      '❤️','🧡','💛','💚','💙','💜','🖤','🤍','🤎','💔','❣️','💕','💞',
+      '💓','💗','💖','💘','💝','💯','✨','🔥','💫','⭐','🌟','💥','💢',
+      '🎉','🎊','🎁','🎈','🥂','🎶','🎵','🌈','💤','💬','💭',
+      '🐰','🐱','🐶','🦊','🐻','🐼','🐨','🐯','🦁','🐸','🐙','🦋','🐝',
+      '🌸','🌺','🌻','🌹','🍀','🍕','🍔','🍟','🌮','🍦','🍰','🎂','🍺',
+      '👀','🫡','🫠','🥹','🫣','🤌','💀','☠️','🫶','🙃','😮‍💨','🤌'
+    ];
+    var DEFAULT_EMOJIS = ['👍','❤️','😂','😮','😢'];
+
+    function buildEmojiSheet() {
+      var grid = document.getElementById('emoji-sheet-grid');
+      if (!grid || grid.childElementCount > 0) return;
+      var seen = {};
+      EMOJI_LIST.forEach(function(emoji) {
+        if (seen[emoji]) return;
+        seen[emoji] = true;
+        var btn = document.createElement('button');
+        btn.textContent = emoji;
+        btn.addEventListener('click', function() {
+          var sheet = document.getElementById('emoji-sheet');
+          var msgId = sheet.dataset.targetId;
+          if (msgId) toggleReaction(msgId, emoji);
+          closeEmojiSheet();
+        });
+        grid.appendChild(btn);
+      });
+    }
+
+    function openEmojiSheet(messageId) {
+      buildEmojiSheet();
+      var sheet = document.getElementById('emoji-sheet');
+      sheet.dataset.targetId = messageId;
+      document.getElementById('emoji-sheet-overlay').classList.add('open');
+      sheet.classList.add('open');
+    }
+
+    function closeEmojiSheet() {
+      document.getElementById('emoji-sheet-overlay').classList.remove('open');
+      document.getElementById('emoji-sheet').classList.remove('open');
+      activePickerMsgId = null;
+    }
+
+    document.getElementById('emoji-sheet-overlay').addEventListener('click', closeEmojiSheet);
+
+    function closeDesktopPicker() {
+      var p = document.getElementById('active-reaction-picker');
+      if (p) p.remove();
+      activePickerMsgId = null;
+    }
+
+    function showDesktopPicker(messageId, anchorEl) {
+      closeDesktopPicker();
+      activePickerMsgId = messageId;
+      var picker = document.createElement('div');
+      picker.className = 'reaction-picker';
+      picker.id = 'active-reaction-picker';
+      DEFAULT_EMOJIS.forEach(function(emoji) {
+        var btn = document.createElement('button');
+        btn.textContent = emoji;
+        btn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          toggleReaction(messageId, emoji);
+          closeDesktopPicker();
+        });
+        picker.appendChild(btn);
+      });
+      document.body.appendChild(picker);
+      var rect = anchorEl.getBoundingClientRect();
+      var pickerW = DEFAULT_EMOJIS.length * 42;
+      var left = Math.max(8, Math.min(rect.left + rect.width / 2 - pickerW / 2, window.innerWidth - pickerW - 8));
+      var top = rect.top - 56;
+      if (top < 8) top = rect.bottom + 8;
+      picker.style.left = left + 'px';
+      picker.style.top = top + 'px';
+      setTimeout(function() {
+        document.addEventListener('click', closeDesktopPicker, { once: true });
+      }, 10);
+    }
+
+    function openEmojiPicker(messageId, anchorEl) {
+      if (isMobile) {
+        openEmojiSheet(messageId);
+      } else {
+        showDesktopPicker(messageId, anchorEl);
+      }
+    }
+
+    function getHistoryItem(messageId) {
+      for (var i = 0; i < messageHistory.length; i++) {
+        var h = messageHistory[i];
+        if ((h.type === 'message' || !h.type) && h.id === messageId) return h;
+      }
+      return null;
+    }
+
+    function applyReaction(messageId, emoji, fromUser, action) {
+      var item = getHistoryItem(messageId);
+      if (!item) return;
+      if (!item.reactions) item.reactions = {};
+      if (action === 'remove') {
+        if (item.reactions[emoji]) {
+          item.reactions[emoji] = item.reactions[emoji].filter(function(u) { return u !== fromUser; });
+          if (!item.reactions[emoji].length) delete item.reactions[emoji];
+        }
+      } else {
+        if (!item.reactions[emoji]) item.reactions[emoji] = [];
+        if (item.reactions[emoji].indexOf(fromUser) === -1) {
+          item.reactions[emoji].push(fromUser);
+        }
+      }
+      saveHistory();
+      renderReactionPills(messageId, item.reactions);
+    }
+
+    function toggleReaction(messageId, emoji) {
+      var item = getHistoryItem(messageId);
+      var action = 'add';
+      if (item && item.reactions && item.reactions[emoji] && item.reactions[emoji].indexOf(userName) >= 0) {
+        action = 'remove';
+      }
+      applyReaction(messageId, emoji, userName, action);
+      if (ws && ws.readyState === 1) {
+        try { ws.send(JSON.stringify({ type: 'reaction', messageId: messageId, emoji: emoji, action: action })); } catch(e) {}
+      }
+    }
+
+    function renderReactionPills(messageId, reactions) {
+      var entry = messageElements[messageId];
+      if (!entry) return;
+      var existing = entry.querySelector('.reactions');
+      if (existing) existing.remove();
+      if (!reactions) return;
+      var keys = Object.keys(reactions).filter(function(e) { return reactions[e] && reactions[e].length > 0; });
+      if (!keys.length) return;
+      var pillsDiv = document.createElement('div');
+      pillsDiv.className = 'reactions';
+      keys.forEach(function(emoji) {
+        var users = reactions[emoji];
+        var pill = document.createElement('button');
+        pill.className = 'reaction-pill' + (users.indexOf(userName) >= 0 ? ' reacted' : '');
+        pill.title = users.join(', ');
+        pill.innerHTML = emoji + ' <span style="font-size:11px;opacity:0.85">' + users.length + '</span>';
+        pill.addEventListener('click', (function(e) { return function() { toggleReaction(messageId, e); }; })(emoji));
+        pillsDiv.appendChild(pill);
+      });
+      var meta = entry.querySelector('.message-meta');
+      if (meta) entry.insertBefore(pillsDiv, meta);
+      else entry.appendChild(pillsDiv);
+    }
+    // ── end Emoji Reactions ──────────────────────────────────────────────────
 
     function requestNotifPermission() {
       if ('Notification' in window && Notification.permission === 'default') {
@@ -513,6 +769,8 @@
           }
         } else if (data.type === 'read') {
           markMessageRead(data.id, data.by);
+        } else if (data.type === 'reaction') {
+          applyReaction(data.messageId, data.emoji, data.userName, data.action || 'add');
         }
       };
       ws.onclose = function() {
@@ -722,6 +980,7 @@
         '</div>' +
         '<div class="message-meta">' +
           '<span class="time">' + formatTime(item.time) + '</span>' +
+          '<button type="button" class="react-btn" aria-label="react">☺</button>' +
           (item.isSent ? '<span class="receipt">' + escapeHtml(item.readState || 'sent') + '</span>' : '') +
         '</div>';
       var replyBtn = div.querySelector('.reply-btn');
@@ -731,10 +990,36 @@
           setReplyTarget(item);
         });
       }
+      // React button — desktop click, mobile also works via long-press
+      var reactBtn = div.querySelector('.react-btn');
+      if (reactBtn && item.id) {
+        reactBtn.addEventListener('click', function(e) {
+          e.stopPropagation();
+          openEmojiPicker(item.id, reactBtn);
+        });
+      }
+      // Mobile long-press on bubble opens emoji sheet
+      if (isMobile && item.id) {
+        var bubbleEl = div.querySelector('.bubble');
+        if (bubbleEl) {
+          bubbleEl.addEventListener('touchstart', function() {
+            longPressTimer = setTimeout(function() { openEmojiPicker(item.id, bubbleEl); }, 520);
+          }, { passive: true });
+          bubbleEl.addEventListener('touchend', function() {
+            if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+          });
+          bubbleEl.addEventListener('touchmove', function() {
+            if (longPressTimer) { clearTimeout(longPressTimer); longPressTimer = null; }
+          }, { passive: true });
+        }
+      }
       messagesDiv.appendChild(div);
       messagesDiv.scrollTop = messagesDiv.scrollHeight;
+      // Render saved reactions (from history or pre-populated data)
+      if (item.id && item.reactions && Object.keys(item.reactions).length) {
+        renderReactionPills(item.id, item.reactions);
+      }
       if (shouldPersist) {
-        // Always stamp type so renderHistory can match it on reload
         var storeItem = {};
         for (var k in item) { if (item.hasOwnProperty(k)) storeItem[k] = item[k]; }
         storeItem.type = 'message';
