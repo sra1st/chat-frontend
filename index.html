@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>🐰💬</title>
   <meta property="og:title" content="bunnychat 🐰💬">
   <meta property="og:description" content="for paranoid bunnies to discuss their secret carrot stash">
@@ -33,8 +33,7 @@
     }
     #name-screen img { width: min(260px, 45vw); mix-blend-mode: screen; margin-bottom: 8px; display: block; flex-shrink: 0; }
     #name-screen h2 { font-family: 'Nunito', sans-serif; font-size: clamp(24px, 5vw, 38px); color: #fff; margin-bottom: 6px; font-weight: 800; letter-spacing: 1px; text-shadow: 0 0 30px rgba(255,255,255,0.3); text-align: center; flex-shrink: 0; }
-    #name-screen .subtitle { font-size: clamp(11px, 2vw, 13px); color: rgba(255,255,255,0.6); margin-bottom: 24px; text-align: center; letter-spacing: 1px; flex-shrink: 0; }
-    .field-label { font-size: 11px; color: rgba(255,255,255,0.85); letter-spacing: 1px; text-transform: lowercase; margin-bottom: 6px; width: 100%; max-width: 380px; text-align: left; flex-shrink: 0; }
+    #name-screen .subtitle { font-size: clamp(11px, 2vw, 13px); color: rgba(255,255,255,0.6); margin-bottom: 24px; text-align: center; letter-spacing: 1px; flex-shrink: 0; }    .field-label { font-size: 11px; color: rgba(255,255,255,0.85); letter-spacing: 1px; text-transform: lowercase; margin-bottom: 6px; width: 100%; max-width: 380px; text-align: left; flex-shrink: 0; }
     #name-input, #code-input { width: 100%; max-width: 380px; background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.4); border-radius: 16px; padding: 13px 18px; color: #fff; font-size: 15px; outline: none; -webkit-appearance: none; margin-bottom: 14px; flex-shrink: 0; }
     #name-input::-webkit-input-placeholder, #code-input::-webkit-input-placeholder { color: rgba(255,255,255,0.4); }
     #name-input:focus, #code-input:focus { border-color: rgba(255,255,255,0.75); background: rgba(255,255,255,0.25); }
@@ -107,8 +106,8 @@
     .message.received:after { left: -6px; }
 
     .bubble { display: inline-block; padding: 10px 16px; border-radius: 20px; font-size: 15px; line-height: 1.5; color: #fff; max-width: 100%; word-break: break-word; overflow-wrap: anywhere; text-align: left; }
-    .sent .bubble { background: rgba(96, 41, 138, 0.92); border: 1px solid rgba(255,255,255,0.18); border-bottom-right-radius: 5px; box-shadow: 0 10px 22px rgba(53, 9, 82, 0.22); }
-    .received .bubble { background: rgba(70, 22, 103, 0.92); border: 1px solid rgba(255,255,255,0.18); border-bottom-left-radius: 5px; box-shadow: 0 10px 22px rgba(53, 9, 82, 0.22); }
+    .sent .bubble { background: rgba(148, 88, 210, 0.88); border: 1px solid rgba(255,255,255,0.22); border-bottom-right-radius: 5px; box-shadow: 0 10px 22px rgba(53, 9, 82, 0.22); }
+    .received .bubble { background: rgba(52, 10, 85, 0.95); border: 1px solid rgba(255,255,255,0.13); border-bottom-left-radius: 5px; box-shadow: 0 10px 22px rgba(53, 9, 82, 0.22); }
     .bubble strong { font-size: 11px; opacity: 0.7; letter-spacing: 0.5px; text-transform: uppercase; display: block; margin-bottom: 2px; }
     .message .time { font-size: 10px; color: rgba(255,255,255,0.45); margin-top: 4px; letter-spacing: 0.5px; }
 
@@ -171,24 +170,13 @@
       max-width: 100%;
     }
     .message .reply-btn {
-      position: absolute;
-      top: -6px;
-      right: -8px;
-      border: 1px solid rgba(255,255,255,0.18);
-      background: rgba(74, 24, 109, 0.95);
-      color: #fff;
-      border-radius: 999px;
-      width: 26px;
-      height: 26px;
-      font-size: 12px;
-      cursor: pointer;
-      opacity: 0;
-      -webkit-appearance: none;
-      transition: opacity 0.15s ease, transform 0.15s ease;
+      background: none; border: none; color: rgba(255,255,255,0.5);
+      font-size: 14px; cursor: pointer; padding: 0 2px; line-height: 1;
+      opacity: 0; transition: opacity 0.15s; -webkit-appearance: none; flex-shrink: 0;
     }
-    .message:hover .reply-btn, .message:focus-within .reply-btn { opacity: 1; transform: scale(1.02); }
-    .message.sent .reply-btn { right: auto; left: -8px; }
-    .message .reply-btn:active { transform: scale(0.96); }
+    .message:hover .reply-btn, .message:focus-within .reply-btn { opacity: 1; }
+    .message .reply-btn:hover { color: rgba(255,255,255,0.9); }
+    @media (hover: none) { .reply-btn { opacity: 0.35 !important; } }
     .reply-quote {
       border-left: 2px solid rgba(255,255,255,0.45);
       padding: 4px 8px;
@@ -240,7 +228,7 @@
     }
 
     #input-area { padding: 10px 14px 16px; display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-align: end; -webkit-align-items: flex-end; align-items: flex-end; -webkit-flex-shrink: 0; flex-shrink: 0; gap: 10px; }
-    #msg-input { -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; background: rgba(80,20,120,0.55); border: 1px solid rgba(255,255,255,0.35); border-radius: 24px; padding: 11px 18px; color: #fff; font-size: 15px; outline: none; -webkit-appearance: none; resize: none; overflow-y: hidden; min-height: 44px; max-height: 130px; line-height: 1.45; font-family: inherit; display: block; }
+    #msg-input { -webkit-box-flex: 1; -webkit-flex: 1; flex: 1; background: rgba(80,20,120,0.55); border: 1px solid rgba(255,255,255,0.35); border-radius: 24px; padding: 11px 18px; color: #fff; font-size: 16px; outline: none; -webkit-appearance: none; resize: none; overflow-y: hidden; min-height: 44px; max-height: 130px; line-height: 1.45; font-family: inherit; display: block; }
     #msg-input::-webkit-input-placeholder { color: rgba(255,255,255,0.5); }
     #send-btn { background: rgba(255,255,255,0.25); border: 1px solid rgba(255,255,255,0.5); border-radius: 50%; width: 44px; height: 44px; color: rgba(48,8,86,0.92); font-size: 20px; cursor: pointer; -webkit-flex-shrink: 0; flex-shrink: 0; -webkit-appearance: none; display: -webkit-box; display: -webkit-flex; display: flex; -webkit-box-align: center; -webkit-align-items: center; align-items: center; -webkit-box-pack: center; -webkit-justify-content: center; justify-content: center; padding: 0; }
     #send-btn:active { background: rgba(255,255,255,0.45); }
@@ -293,6 +281,7 @@
     }
     .message:hover .react-btn, .message:focus-within .react-btn { opacity: 1; }
     .react-btn:hover { color: rgba(255,255,255,0.9); }
+    @media (hover: none) { .react-btn { opacity: 0.35 !important; } }
 
     /* ── Reaction pills ── */
     .reactions { display: -webkit-box; display: -webkit-flex; display: flex; flex-wrap: wrap; gap: 4px; margin-top: 5px; }
@@ -348,7 +337,7 @@
       border-radius: 2px; margin: 12px auto 10px;
     }
     #emoji-sheet-grid {
-      display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px;
+      display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;
     }
     #emoji-sheet-grid button {
       background: none; border: none; font-size: 28px; cursor: pointer;
@@ -366,7 +355,7 @@
   <div id="name-screen">
     <img src="bunny.jpg" alt="">
     <h2>bunnychat 🐰💬</h2>
-    <div class="subtitle">end-to-end decrypted &nbsp;|&nbsp; no logs</div>
+    <div class="subtitle">end-to-end encrypted &nbsp;·&nbsp; no accounts &nbsp;·&nbsp; no logs</div>
     <div class="field-label">your name</div>
     <input type="text" id="name-input" placeholder="enter your name" maxlength="20">
     <div class="field-label">bunny code 🔑</div>
@@ -407,6 +396,41 @@
   <script>
     var WS_URL = 'wss://chat-backend-2ri0.onrender.com';
 
+    // ── E2E Encryption (AES-GCM, key derived from room code) ─────────────────
+    var cryptoKey = null;
+
+    async function deriveKey(code) {
+      var enc = new TextEncoder();
+      var raw = await crypto.subtle.importKey('raw', enc.encode(code), { name: 'PBKDF2' }, false, ['deriveKey']);
+      return crypto.subtle.deriveKey(
+        { name: 'PBKDF2', salt: enc.encode('bunnychat-v1'), iterations: 100000, hash: 'SHA-256' },
+        raw, { name: 'AES-GCM', length: 256 }, false, ['encrypt', 'decrypt']
+      );
+    }
+
+    async function encryptText(text) {
+      if (!cryptoKey) return text;
+      try {
+        var iv = crypto.getRandomValues(new Uint8Array(12));
+        var enc = new TextEncoder();
+        var cipher = await crypto.subtle.encrypt({ name: 'AES-GCM', iv: iv }, cryptoKey, enc.encode(text));
+        var combined = new Uint8Array(12 + cipher.byteLength);
+        combined.set(iv, 0); combined.set(new Uint8Array(cipher), 12);
+        return btoa(String.fromCharCode.apply(null, combined));
+      } catch(e) { return text; }
+    }
+
+    async function decryptText(data) {
+      if (!cryptoKey) return data;
+      try {
+        var bytes = Uint8Array.from(atob(data), function(c) { return c.charCodeAt(0); });
+        var iv = bytes.slice(0, 12); var cipher = bytes.slice(12);
+        var plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: iv }, cryptoKey, cipher);
+        return new TextDecoder().decode(plain);
+      } catch(e) { return data; } // graceful fallback for unencrypted messages
+    }
+    // ── end E2E Encryption ───────────────────────────────────────────────────
+
     var starData = [
       [5,8],[12,22],[20,5],[28,40],[35,15],[42,60],[50,30],[58,10],[65,50],[72,25],
       [80,70],[88,35],[95,12],[8,55],[18,80],[30,65],[45,85],[60,75],[75,90],[90,55],
@@ -426,6 +450,14 @@
       s.style.animationDuration = (1.5 + (i % 3)) + 's';
       sc.appendChild(s);
     }
+
+    // Pause twinkling when tab is hidden to save battery
+    document.addEventListener('visibilitychange', function() {
+      var state = document.hidden ? 'paused' : 'running';
+      document.querySelectorAll('.star').forEach(function(st) {
+        st.style.animationPlayState = state;
+      });
+    });
 
     function goBack() {
       if (ws) { ws.close(); ws = null; }
@@ -676,6 +708,10 @@
     }
 
     function saveHistory() {
+      // Keep last 200 items; never persist transient system messages beyond 20
+      var msgs = messageHistory.filter(function(i) { return i.type === 'message' || !i.type; });
+      var sys  = messageHistory.filter(function(i) { return i.type === 'system'; }).slice(-20);
+      messageHistory = msgs.slice(-180).concat(sys);
       try { localStorage.setItem(historyKey(), JSON.stringify(messageHistory)); } catch(e) {}
     }
 
@@ -709,9 +745,10 @@
       renderReplyPreview();
     }
 
-    function enterChat(name, code) {
+    async function enterChat(name, code) {
       userName = name;
       roomCode = code;
+      cryptoKey = await deriveKey(code);
       saveSession(name, code);
       messageHistory = loadHistory();
       showChat();
@@ -753,12 +790,15 @@
       if (e.keyCode === 13) document.getElementById('join-btn').click();
     });
 
+    var reconnectAttempts = 0;
+
     function connectWebSocket() {
       if (isConnecting) return;
       isConnecting = true;
       ws = new WebSocket(WS_URL);
       ws.onopen = function() {
         isConnecting = false;
+        reconnectAttempts = 0;
         statusDiv.textContent = '✦ connected as ' + userName;
         statusDiv.className = 'connected';
         ws.send(JSON.stringify({ type: 'join', name: userName, code: roomCode }));
@@ -767,15 +807,20 @@
           hasJoined = true;
         }
       };
-      ws.onmessage = function(event) {
+      ws.onmessage = async function(event) {
         var data = JSON.parse(event.data);
         if (data.type === 'message') {
+          var plainText = await decryptText(data.text);
+          var plainReplyTo = null;
+          if (data.replyTo) {
+            plainReplyTo = { id: data.replyTo.id, name: data.replyTo.name, time: data.replyTo.time, text: await decryptText(data.replyTo.text) };
+          }
           addMessage({
             id: data.id,
             name: data.name,
-            text: data.text,
+            text: plainText,
             time: data.time,
-            replyTo: data.replyTo || null,
+            replyTo: plainReplyTo,
             isSent: data.name === userName,
             readState: data.readState || 'sent'
           }, true);
@@ -818,10 +863,12 @@
         presenceDiv.textContent = '';
         presenceDiv.className = '';
         clearTypingState();
-        // Only reconnect if session still exists (user hasn't explicitly left)
         try {
           if (localStorage.getItem('bunnychat_session')) {
-            setTimeout(connectWebSocket, 3000);
+            reconnectAttempts++;
+            var delays = [3000, 5000, 10000, 20000, 30000];
+            var delay = delays[Math.min(reconnectAttempts - 1, delays.length - 1)];
+            setTimeout(connectWebSocket, delay);
           }
         } catch(e) { setTimeout(connectWebSocket, 3000); }
       };
@@ -943,7 +990,7 @@
       saveHistory();
     }
 
-    function sendMessage() {
+    async function sendMessage() {
       var text = msgInput.value.trim();
       if (!text || !ws || ws.readyState !== 1) return;
       var id = 'm_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8);
@@ -954,7 +1001,12 @@
         text: replyTarget.text,
         time: replyTarget.time
       } : null;
-      var payload = { type: 'message', id: id, text: text, time: time, replyTo: replyTo };
+      var encText = await encryptText(text);
+      var encReplyTo = null;
+      if (replyTo) {
+        encReplyTo = { id: replyTo.id, name: replyTo.name, time: replyTo.time, text: await encryptText(replyTo.text) };
+      }
+      var payload = { type: 'message', id: id, text: encText, time: time, replyTo: encReplyTo };
       ws.send(JSON.stringify(payload));
       addMessage({
         id: id,
@@ -967,10 +1019,18 @@
       }, true);
       msgInput.value = '';
       msgInput.style.height = 'auto';
+      charCounter.style.display = 'none';
       sendTypingState(false);
       if (typingTimer) { clearTimeout(typingTimer); typingTimer = null; }
       clearReplyTarget();
     }
+
+    var MAX_MSG = 4000;
+    var charCounter = document.createElement('div');
+    charCounter.id = 'char-counter';
+    charCounter.style.cssText = 'position:absolute;bottom:20px;right:64px;font-size:10px;color:rgba(255,255,255,0.35);pointer-events:none;letter-spacing:0.5px;display:none;';
+    document.getElementById('input-area').style.position = 'relative';
+    document.getElementById('input-area').appendChild(charCounter);
 
     document.getElementById('send-btn').addEventListener('click', sendMessage);
     msgInput.addEventListener('keydown', function(e) {
@@ -979,7 +1039,18 @@
     msgInput.addEventListener('input', function() {
       msgInput.style.height = 'auto';
       msgInput.style.height = Math.min(msgInput.scrollHeight, 130) + 'px';
-      var hasText = msgInput.value.trim().length > 0;
+      // Char limit
+      if (msgInput.value.length > MAX_MSG) msgInput.value = msgInput.value.slice(0, MAX_MSG);
+      var len = msgInput.value.length;
+      var remaining = MAX_MSG - len;
+      if (remaining < 200) {
+        charCounter.textContent = remaining;
+        charCounter.style.display = 'block';
+        charCounter.style.color = remaining < 50 ? 'rgba(255,120,120,0.9)' : 'rgba(255,255,255,0.35)';
+      } else {
+        charCounter.style.display = 'none';
+      }
+      var hasText = len > 0;
       if (hasText) {
         sendTypingState(true);
         scheduleTypingStop();
@@ -999,6 +1070,8 @@
       div.className = 'message ' + (item.isSent ? 'sent' : 'received');
       if (item.id) {
         messageElements[item.id] = div;
+        var meKeys = Object.keys(messageElements);
+        if (meKeys.length > 500) delete messageElements[meKeys[0]];
       }
       var replyMarkup = '';
       if (item.replyTo && item.replyTo.text) {
@@ -1010,13 +1083,13 @@
       }
       div.innerHTML =
         '<div class="bubble-wrap">' +
-          '<button type="button" class="reply-btn" aria-label="reply">↩</button>' +
           '<div class="bubble">' +
             replyMarkup +
             escapeHtml(item.text) +
           '</div>' +
         '</div>' +
         '<div class="message-meta">' +
+          '<button type="button" class="reply-btn" aria-label="reply">↩</button>' +
           '<span class="time">' + formatTime(item.time) + '</span>' +
           '<button type="button" class="react-btn" aria-label="react">☺</button>' +
           (item.isSent ? '<span class="receipt">' + escapeHtml(item.readState || 'sent') + '</span>' : '') +
@@ -1028,7 +1101,6 @@
           setReplyTarget(item);
         });
       }
-      // React button — desktop click, mobile also works via long-press
       var reactBtn = div.querySelector('.react-btn');
       if (reactBtn && item.id) {
         reactBtn.addEventListener('click', function(e) {
@@ -1105,8 +1177,5 @@
       }
     } catch(e) {}
   </script>
-</body>
-</html>
-
 </body>
 </html>
